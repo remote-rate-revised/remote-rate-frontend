@@ -18,6 +18,9 @@ class Landing extends React.Component {
     try {
       const { getIdTokenClaims } = this.props.auth0;
       let tokenClaims = await getIdTokenClaims();
+
+      // If no token on Initial load, does nothing
+      if(!tokenClaims) return;
       const jwt = tokenClaims.__raw;
       const config = {
         headers: { "Authorization": `Bearer ${jwt}` },

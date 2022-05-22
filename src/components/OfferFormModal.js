@@ -26,9 +26,14 @@ class OfferFormModal extends React.Component {
   getNewLocation = async () => {
     // function will use city stored in state to search api with axios
     try {
-      let newLocationData = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${this.state.offer.newLocation}&key=${process.env.REACT_APP_GOOGLE_GEOCODE_API}`)
-      let lat = newLocationData.data.results[0].geometry.location.lat
-      let lon = newLocationData.data.results[0].geometry.location.lng
+      let locationIQ = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ}&q=${this.state.offer.newLocation}&format=json`
+      let newLocationData = await axios.get(locationIQ)
+      let lon = newLocationData.data[0].lon
+      let lat = newLocationData.data[0].lat
+
+
+      // let lat = newLocationData.data.results[0].geometry.location.lat
+      // let lon = newLocationData.data.results[0].geometry.location.lng
       this.props.getWorkLocation2(lat, lon)
 
       return { lat, lon };
@@ -150,7 +155,7 @@ class OfferFormModal extends React.Component {
       email: prevState.email,
     }));
   }
-
+  
   render() {
     return (
       <Modal show={this.props.showOfferModal}>

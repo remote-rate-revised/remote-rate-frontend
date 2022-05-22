@@ -84,14 +84,23 @@ class Profile extends React.Component {
     e.preventDefault();
     try {
       this.handleCloseForm();
-      let locationData = await axios.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${this.state.addressToSearch}&key=${process.env.REACT_APP_GOOGLE_GEOCODE_API}`);
+
+      let locationIQ = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ}&q=${this.state.addressToSearch}&format=json`
+
+      let locationData = await axios.get(locationIQ);
+
+      console.log('locationData.data', locationData.data);
 
       this.setState(prevState => ({
         userInfo: {
           ...prevState.userInfo,
           email: this.props.email,
-          homeLat: locationData.data.results[0].geometry.location.lat,
-          homeLon: locationData.data.results[0].geometry.location.lng,
+
+          homeLon: locationData.data[0].lon,
+          homeLat: locationData.data[0].lat,
+          
+          // homeLat: locationData.data.results[0].geometry.location.lat,
+          // homeLon: locationData.data.results[0].geometry.location.lng,
         },
         showEditModal: prevState.showEditModal,
       }));
@@ -345,7 +354,7 @@ class Profile extends React.Component {
               showOfferModal={this.state.showOfferModal}
               handleCloseOfferForm={this.handleCloseOfferForm}
               getWorkLocation2={this.getWorkLocation2}
-              handleEditUser={this.handleEditUser}
+              // handleEditUser={this.handleEditUser}
               updateStateForUs={this.updateStateForUs}
             />
             : ''

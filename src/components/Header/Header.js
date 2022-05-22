@@ -1,7 +1,7 @@
 import React from 'react';
 import { withAuth0 } from '@auth0/auth0-react';
-import LogoutButton from './LogoutButton.js';
-import Login from './Login.js';
+import LogoutButton from './LogoutButton.js.js';
+import Login from './Login.js.js';
 import { Container, Row, Col } from 'react-bootstrap';
 
 class Header extends React.Component {
