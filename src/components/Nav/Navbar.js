@@ -3,10 +3,10 @@ import * as FaIcons from 'react-icons/fa';
 import * as AiIcons from 'react-icons/ai';
 import { Link } from 'react-router-dom';
 import { sidebardata } from './sidebardata';
-import '../css/Navbar.css';
+import '../../css/Navbar.css';
 import { IconContext } from 'react-icons';
-import LogoutButton from './LogoutButton';
-import LoginButton from './LoginButton';
+import LogoutButton from '../auth/LogoutButton';
+import LoginButton from '../auth/LoginButton';
 
 function Navbar(props) {
   const [sidebar, setSidebar] = useState(false);

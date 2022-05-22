@@ -1,10 +1,10 @@
 import React from 'react';
-import '../css/AboutUs.css';
+import '../../css/AboutUs.css';
 import { Carousel, Container, Jumbotron } from 'react-bootstrap'
-import charlieProfile from '../img/profile-Charlie-lanscape-theme.jpg'
-import zachProfile from '../img/Zachary Final.jpg'
-import quenProfile from '../img/Quen.JPG'
-import philProfile from '../img/phil-pic.jpg'
+import charlieProfile from '../../img/profile-Charlie-lanscape-theme.jpg'
+import zachProfile from '../../img/Zachary Final.jpg'
+import quenProfile from '../../img/Quen.JPG'
+import philProfile from '../../img/phil-pic.jpg'
 
 
 class AboutUs extends React.Component {
