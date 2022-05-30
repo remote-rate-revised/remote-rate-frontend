@@ -47,9 +47,15 @@ class OfferFormModal extends React.Component {
     let totalCommute = commuteDist * 2
 
     let hours = totalCommute / 60
-    let hoursShortened = hours.toFixed(2);
+    // let hoursShortened = hours.toFixed(2);
 
-    return `${hoursShortened/2*261} and ${hoursShortened*261} hours`
+    let totalMinHours = hours/2*261
+    let totalMaxHours = hours*261
+
+    totalMinHours.toFixed(2)
+    totalMaxHours.toFixed(2)
+
+    return `${totalMinHours} and ${totalMaxHours} hours`
 
   }
   
@@ -88,11 +94,6 @@ class OfferFormModal extends React.Component {
       console.log(error);
     }
   }
-
-  updateStateForUs =(data) => {
-    this.props.updateStateForUs(data)
-  }
-
 
   getUserData = async (e) => {
     await this.props.getUserData();

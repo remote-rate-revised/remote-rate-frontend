@@ -67,7 +67,6 @@ class Compare extends React.Component {
   }
 
   render() {
-
     const popover = (
       <Popover id="popover-basic">
         <Popover.Title as="h3">How to see comparisons</Popover.Title>
@@ -76,6 +75,7 @@ class Compare extends React.Component {
         </Popover.Content>
       </Popover>
     );
+
 
     return (
 
@@ -99,6 +99,7 @@ class Compare extends React.Component {
             </OverlayTrigger>
           </p>
         </Jumbotron>
+        
         {this.state.renderData ?
           <Container >
             <Accordion className="m-4">

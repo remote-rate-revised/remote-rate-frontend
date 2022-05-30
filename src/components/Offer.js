@@ -22,6 +22,8 @@ class Offer extends React.Component {
       },
       buttonClicked: true,
     })
+    // this.props.deleteOffer(this.state.userInfo);
+
   }
 
   render() {
