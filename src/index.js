@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "./css/index.css";
 import App from "./App";
 import { Auth0Provider } from "@auth0/auth0-react";
-import { UserInfoProvider } from "./context/userInfo";
 
 <style>
   @import
@@ -21,9 +20,7 @@ ReactDOM.render(
       clientId={clientId}
       redirectUri={window.location.origin}
     >
-      <UserInfoProvider>
         <App />
-      </UserInfoProvider>
     </Auth0Provider>
   </React.StrictMode>,
   document.getElementById("root")

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useEffect, useState } from "react";
 import Offer from "../Offer";
 import OfferFormModal from "../OfferFormModal";
 import {
@@ -14,206 +14,201 @@ import {
 import axios from "axios";
 import getDistance from "geolib/es/getDistance";
 import ProfileModal from "./ProfileModal";
-import UserInfoContext from '../../context/userInfo';
 
-class Profile extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userInfo: {
-        email: "",
-        homeLat: "",
-        homeLon: "",
-        workLat: "",
-        workLon: "",
-        curEmployer: "",
-        curSalary: "",
-        curRemote: false,
-        commuteDist: "",
-        milesPerGal: "",
-        newJob: [],
-        _id: "",
-      },
-      addressToSearch: "",
-      showEditModal: false,
-      showOfferModal: false,
-    };
-  }
-  static contextType = UserInfoContext
 
-  componentDidMount = async () => {
+
+function Profile(props) {
+  const [userInfo, setUserInfo] = useState({
+    email: "",
+    homeLat: "",
+    homeLon: "",
+    workLat: "",
+    workLon: "",
+    curEmployer: "",
+    curSalary: "",
+    curRemote: false,
+    commuteDist: "",
+    milesPerGal: "",
+    newJob: [],
+    _id: "",
+  });
+
+  const [addressToSearch, setAddressToSearch] = useState("");
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showOfferModal, setShowOfferModal] = useState(false);
+
+  useEffect(() => {
     try {
-      await this.getUserData();
+      getUserData();
     } catch (err) {
       console.log("Component Did Mount Error", err);
     }
-  };
+  }, [userInfo.email])
 
-  getUserData = async () => {
+  // componentDidMount = async () => {
+  // };
+
+  let getUserData = async () => {
     const response = await axios.get(
       `${process.env.REACT_APP_BACKEND_SERVER}/profile`
     );
     const allData = response.data;
     allData.map((user) => {
       // Database user vs user logged in
-      if (user.email === this.props.email) {
-        return this.setState({
-          userInfo: user,
-        });
+      if (user.email === props.email) {
+        return setUserInfo(prevState => ({
+          ...prevState,
+          ...user
+        }));
       }
       return user;
     });
   };
 
-  getWorkLocation2 = (lat, lon) => {
+  let getWorkLocation2 = (lat, lon) => {
     let distanceToWork = getDistance(
       {
-        latitude: this.state.userInfo.homeLat,
-        longitude: this.state.userInfo.homeLon,
+        latitude: userInfo.homeLat,
+        longitude: userInfo.homeLon,
       },
       { latitude: lat, longitude: lon }
     );
     let distanceInMiles = distanceToWork / 1609;
 
-    this.setState((prevState) => ({
-      userInfo: {
-        ...prevState.userInfo,
+    setUserInfo((prevState) => ({
+        ...prevState,
         commuteDist: distanceInMiles,
         workLat: lat,
         workLon: lon,
-      },
-    }));
+      }
+    ));
 
     return Math.round(distanceInMiles);
   };
 
-  getLocation = async (e) => {
+  let getLocation = async (e) => {
     //  function will use city stored in state to search api with axios
     e.preventDefault();
     try {
-      this.handleCloseForm();
+      handleCloseForm();
 
-      let locationIQ = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ}&q=${this.state.addressToSearch}&format=json`;
+      let locationIQ = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ}&q=${addressToSearch}&format=json`;
 
       let locationData = await axios.get(locationIQ);
 
-      this.setState((prevState) => ({
-        userInfo: {
-          ...prevState.userInfo,
-          email: this.props.email,
-
+      setUserInfo((prevState) => ({
+          ...prevState,
+          email: props.email,
           homeLon: locationData.data[0].lon,
           homeLat: locationData.data[0].lat,
-        },
-        showEditModal: prevState.showEditModal,
-      }));
+        }
+        // showEditModal: prevState.showEditModal,
+      ));
+    // setShowEditModal()
 
-      let userInfoDistance = {
-        homeLat: "1",
-        homeLon: "1",
-      }
-
-
-      this.context.setStateInfo(userInfoDistance)
-      // console.log('this.state.userInfo', this.state.userInfo);
-      // this.context.setStateInfo(this.state.userInfo)
-
-
-      this.handleEditUser(this.state.userInfo);
+      handleEditUser(userInfo);
     } catch (err) {
       console.log(err);
     }
   };
-  handleCityInput = (e) => {
+
+  let handleCityInput = (e) => {
     e.preventDefault();
-    this.setState((prevState) => ({
-      userInfo: {
-        ...prevState.userInfo,
-      },
-      addressToSearch: e.target.value,
-      showEditModal: prevState.showEditModal,
-    }));
+    // setState((prevState) => ({
+    //   userInfo: {
+    //     ...prevState.userInfo,
+    //   },
+    //   addressToSearch: e.target.value,
+    //   showEditModal: prevState.showEditModal,
+    // }));
+    setAddressToSearch(e.target.value)
+
   };
 
-  handleEmployerInput = (e) => {
+  let handleEmployerInput = (e) => {
     e.preventDefault();
-    this.setState((prevState) => ({
-      userInfo: {
-        ...prevState.userInfo,
+    setUserInfo((prevState) => ({
+        ...prevState,
         curEmployer: e.target.value,
-      },
-      showEditModal: prevState.showEditModal,
-    }));
+      }
+      // showEditModal: prevState.showEditModal,
+    ));
   };
-  handleSalaryInput = (e) => {
+
+  let handleSalaryInput = (e) => {
     e.preventDefault();
-    this.setState((prevState) => ({
-      userInfo: {
-        ...prevState.userInfo,
+    setUserInfo((prevState) => ({
+        ...prevState,
         curSalary: e.target.value,
-      },
-      showEditModal: prevState.showEditModal,
-    }));
+      }
+      // showEditModal: prevState.showEditModal,
+    ));
   };
-  handleIsRemote = (e) => {
+
+  let handleIsRemote = (e) => {
     e.preventDefault();
-    this.setState((prevState) => ({
-      userInfo: {
-        ...prevState.userInfo,
+    setUserInfo((prevState) => ({
+        ...prevState,
         curRemote: true,
-      },
-      showEditModal: prevState.showEditModal,
-    }));
+      }
+      // showEditModal: prevState.showEditModal,
+    ));
   };
-  handleCurCommute = (e) => {
+
+  let handleCurCommute = (e) => {
     e.preventDefault();
 
-    this.setState((prevState) => ({
-      userInfo: {
-        ...prevState.userInfo,
+    setUserInfo((prevState) => ({
+        ...prevState,
         commuteDist: e.target.value,
-      },
-      showEditModal: prevState.showEditModal,
-    }));
+      }
+      // showEditModal: prevState.showEditModal,
+    ));
   };
-  handleMPG = (e) => {
+
+  let handleMPG = (e) => {
     e.preventDefault();
-    this.setState((prevState) => ({
-      userInfo: {
-        ...prevState.userInfo,
+    setUserInfo((prevState) => ({
+        ...prevState,
         milesPerGal: e.target.value,
-      },
-      showEditModal: prevState.showEditModal,
-    }));
-  };
-  handleShowForm = () => {
-    this.setState({
-      showEditModal: true,
-    });
+      }
+      // showEditModal: prevState.showEditModal,
+    ));
   };
 
-  handleShowOfferForm = () => {
-    this.setState({
-      showOfferModal: true,
-    });
+  let handleShowForm = () => {
+    // setState({
+    //   showEditModal: true,
+    // });
+    setShowEditModal(true)
   };
 
-  handleCloseOfferForm = () => {
-    this.setState({
-      showOfferModal: false,
-    });
+  let handleShowOfferForm = () => {
+    // setState({
+    //   showOfferModal: true,
+    // });
+    setShowOfferModal(true)
   };
 
-  handleCloseForm = () => {
-    this.setState({
-      showEditModal: false,
-    });
+  let handleCloseOfferForm = () => {
+    // setState({
+    //   showOfferModal: false,
+    // });
+    setShowOfferModal(false)
   };
 
-  deleteOffer = async (user) => {
+  let handleCloseForm = () => {
+    // setState({
+    //   showEditModal: false,
+    // });
+    setShowEditModal(false)
+  };
+
+  let deleteOffer = async (user) => {
     try {
-      this.setState((prevState) => ({
-        userInfo: user,
+      setUserInfo((prevState) => ({
+        ...prevState,
+        ...user,
       }));
       await axios.put(
         `${process.env.REACT_APP_BACKEND_SERVER}/profile/${user._id}`,
@@ -224,115 +219,109 @@ class Profile extends React.Component {
     }
   };
 
-  handleEditUser = async (userData) => {
+  let handleEditUser = async (userData) => {
     try {
       await axios.post(
         `${process.env.REACT_APP_BACKEND_SERVER}/profile`,
         userData
       );
-      this.getUserData();
+      getUserData();
     } catch (error) {
       console.log(error);
     }
   };
 
-  render() {
-    // let { userInfo, setUserInfo} = this.context
-    // console.log('userInfo', userInfo);
-    console.log('this.context', this.context);
-    // console.log('UserInfoContext', UserInfoContext);
-    return (
-      <>
-        <Container>
-          <Row>
-            <Col>
-              <Jumbotron className="m-3 profileJumbotron">
-                <h1>Hello, {this.props.name} !</h1>
-              </Jumbotron>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <Card className="shadow-lg p-3 mb-5 bg-white rounded">
-                <Card.Header>Your Current Information</Card.Header>
-                <Card.Body>
-                  <Col>
-                    Home Address: {this.state.addressToSearch}
-                    <br />
-                    Employer: {this.state.userInfo.curEmployer}
-                    <br />
-                    Salary: ${this.state.userInfo.curSalary}
-                    <br />
-                    Remote: {this.state.userInfo.curRemote ? "Yes" : "No"}
-                  </Col>
-                  <Col>
-                    <Button className="m-3" onClick={this.handleShowForm}>
-                      Edit User Info
-                    </Button>
-                    <Button
-                      className="m-3"
-                      variant="success"
-                      onClick={this.handleShowOfferForm}
-                    >
-                      New Offer
-                    </Button>
-                  </Col>
-                </Card.Body>
-              </Card>
-            </Col>
-            <Col>
-              <CardColumns>
-                {this.state.userInfo.newJob.map((job, idx) => (
-                  <Offer
-                    key={idx}
-                    userInfo={this.state.userInfo}
-                    deleteOffer={this.deleteOffer}
-                    employer={job.newEmployer}
-                    salary={job.newSalary}
-                    remote={job.newRemote}
-                    location={job.newLocation}
-                    id={job._id}
-                  />
-                ))}
-              </CardColumns>
-            </Col>
-          </Row>
-        </Container>
+  return (
+    <>
+      <Container>
+        <Row>
+          <Col>
+            <Jumbotron className="m-3 profileJumbotron">
+              <h1>Hello, {props.name} !</h1>
+            </Jumbotron>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            <Card className="shadow-lg p-3 mb-5 bg-white rounded">
+              <Card.Header>Your Current Information</Card.Header>
+              <Card.Body>
+                <Col>
+                  Home Address: {addressToSearch}
+                  <br />
+                  Employer: {userInfo.curEmployer}
+                  <br />
+                  Salary: ${userInfo.curSalary}
+                  <br />
+                  Remote: {userInfo.curRemote ? "Yes" : "No"}
+                </Col>
+                <Col>
+                  <Button className="m-3" onClick={handleShowForm}>
+                    Edit User Info
+                  </Button>
+                  <Button
+                    className="m-3"
+                    variant="success"
+                    onClick={handleShowOfferForm}
+                  >
+                    New Offer
+                  </Button>
+                </Col>
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col>
+            <CardColumns>
+              {userInfo.newJob.map((job, idx) => (
+                <Offer
+                  key={idx}
+                  userInfo={userInfo}
+                  deleteOffer={deleteOffer}
+                  employer={job.newEmployer}
+                  salary={job.newSalary}
+                  remote={job.newRemote}
+                  location={job.newLocation}
+                  id={job._id}
+                />
+              ))}
+            </CardColumns>
+          </Col>
+        </Row>
+      </Container>
 
-        {this.state.showEditModal ? (
-          <Modal show={this.state.showEditModal}>
-            <ProfileModal
-              getLocation={this.getLocation}
-              handleEmployerInput={this.handleEmployerInput}
-              handleCityInput={this.handleCityInput}
-              handleSalaryInput={this.handleSalaryInput}
-              handleIsRemote={this.handleIsRemote}
-              handleMPG={this.handleMPG}
-              handleCloseForm={this.handleCloseForm}
-            />
-          </Modal>
-        ) : (
-          ""
-        )}
-
-        {this.state.showOfferModal ? (
-          <OfferFormModal
-            id={this.state.userInfo._id}
-            getUserData={this.getUserData}
-            userInfo={this.state.userInfo}
-            newJob={this.state.userInfo.newJob}
-            showOfferModal={this.state.showOfferModal}
-            handleCloseOfferForm={this.handleCloseOfferForm}
-            getWorkLocation2={this.getWorkLocation2}
-            // handleEditUser={this.handleEditUser}
-            updateStateForUs={this.updateStateForUs}
+      {showEditModal ? (
+        <Modal show={showEditModal}>
+          <ProfileModal
+            getLocation={getLocation}
+            handleEmployerInput={handleEmployerInput}
+            handleCityInput={handleCityInput}
+            handleSalaryInput={handleSalaryInput}
+            handleIsRemote={handleIsRemote}
+            handleMPG={handleMPG}
+            handleCloseForm={handleCloseForm}
           />
-        ) : (
-          ""
-        )}
-      </>
-    );
-  }
+        </Modal>
+      ) : (
+        ""
+      )}
+
+      {showOfferModal ? (
+        <OfferFormModal
+          id={userInfo._id}
+          getUserData={getUserData}
+          userInfo={userInfo}
+          newJob={userInfo.newJob}
+          showOfferModal={showOfferModal}
+          handleCloseOfferForm={handleCloseOfferForm}
+          getWorkLocation2={getWorkLocation2}
+          // handleEditUser={handleEditUser}
+          // updateStateForUs={updateStateForUs}
+        />
+      ) : (
+        ""
+      )}
+    </>
+  );
 }
 
 export default Profile;
