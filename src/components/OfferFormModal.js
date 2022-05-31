@@ -1,11 +1,11 @@
-import React, { useState, useContext } from "react";
+import React, { useContext } from "react";
 import axios from "axios";
 import { Form, Button, Modal } from "react-bootstrap";
 
 import { UserContext } from "../context/userContext";
 
 function OfferFormModal(props) {
-  let { userInfo, setUserInfo } = useContext(UserContext);
+  let { userInfo } = useContext(UserContext);
   let { offer, setOffer } = useContext(UserContext);
 
   let getNewLocation = async () => {

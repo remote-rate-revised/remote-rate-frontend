@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import Footer from "../Footer/Footer.js";
 import Profile from "../Profile/Profile.js";
 import Compare from "../Compare.js";

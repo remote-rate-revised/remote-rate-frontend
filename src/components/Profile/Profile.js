@@ -31,7 +31,7 @@ function Profile(props) {
     } catch (err) {
       console.log("Component Did Mount Error", err);
     }
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   let getUserData = async () => {
     const response = await axios.get(
@@ -140,10 +140,10 @@ function Profile(props) {
   let handleEditUser = async (userData) => {
     try {
       // let isPaused = false
-      function WaitForLat() {
         if (!userData.homelat) {
           setTimeout(() => {
-            WaitForLat();
+            console.log('what')
+            handleEditUser();
           }, 100);
         } else {
           axios.post(
@@ -152,7 +152,6 @@ function Profile(props) {
           );
           getUserData();
         }
-      }
     } catch (error) {
       console.log(error);
     }

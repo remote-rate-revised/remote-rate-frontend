@@ -1,4 +1,4 @@
-import React, {useContext, useState, useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import '../css/Compare.css';
 import axios from 'axios';
 import { Accordion, Card, Button, Container } from 'react-bootstrap';
@@ -23,7 +23,7 @@ function Compare(props) {
   useEffect(() => {
     getUserData();
     console.log('Run once')
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   let getUserData = async () => {
     const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/profile`);
