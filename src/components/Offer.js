@@ -1,62 +1,42 @@
-import React from 'react';
-import { Button, Card } from 'react-bootstrap';
+import React, { useContext, useState } from "react";
+import { Button, Card } from "react-bootstrap";
+import { UserContext } from "../context/userContext";
 
+function Offer(props) {
+  let [buttonClicked, setButtonClicked] = useState(false);
+  let { userInfo, setUserInfo } = useContext(UserContext);
 
-class Offer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userInfo: {
-        ...this.props.userInfo,
-      },
-      buttonClicked: false,
-    }
+  let handleDelete = () => {
+    let newOffer = userInfo.newJob.filter((job) => job._id !== props.job._id);
+    setUserInfo((prevState) => ({
+      ...prevState,
+      newJob: newOffer,
+    }));
+    setButtonClicked(true);
+  };
+  
+  if (buttonClicked) {
+    props.deleteOffer(userInfo);
+    setButtonClicked(false);
   }
+  return (
+    <Card>
+      <Card.Header>{props.job.newEmployer}</Card.Header>
+      <Card.Body>
+        Salary: {props.job.newSalary}
+        <br />
+        Remote: {props.job.newRemote ? "Yes" : "No"}
+      </Card.Body>
+      <Card.Footer>
+        {props.newLocation}
 
-  handleClick = () => {
-    let needle = this.props.userInfo.newJob.filter(job => job._id !== this.props.id);
-    this.setState({
-      userInfo: {
-        ...this.state.userInfo,
-        newJob: needle,
-      },
-      buttonClicked: true,
-    })
-  }
-
-  render() {
-    if (this.state.buttonClicked) {
-      this.props.deleteOffer(this.state.userInfo);
-      this.setState({
-        buttonClicked: false,
-      });
-    };
-    return (
-      <Card>
-
-        <Card.Header>
-          {this.props.employer}
-        </Card.Header>
-        <Card.Body>
-          Salary: {this.props.salary}
-          <br />
-          Remote: {this.props.remote ? 'Yes' : 'No'}
-        </Card.Body>
-        <Card.Footer>
-          {this.props.location}
-
-          <br />
-          <Button 
-          variant="outline-danger" 
-          onClick={this.handleClick} >
-            Delete
-            </Button>
-
-        </Card.Footer>
-        
-      </Card>
-    )
-  }
+        <br />
+        <Button variant="outline-danger" onClick={handleDelete}>
+          Delete
+        </Button>
+      </Card.Footer>
+    </Card>
+  );
 }
 
 export default Offer;

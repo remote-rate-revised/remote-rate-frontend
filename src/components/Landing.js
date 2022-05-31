@@ -21,6 +21,7 @@ class Landing extends React.Component {
 
       // If no token on Initial load, does nothing
       if(!tokenClaims) return;
+      
       const jwt = tokenClaims.__raw;
       const config = {
         headers: { "Authorization": `Bearer ${jwt}` },
@@ -129,7 +130,7 @@ class Landing extends React.Component {
                   </Card.Body>
                 </Card>
 
-                <div className="bottomSpace ">Wow</div>
+                <div className="bottomSpace "></div>
               </aside>
           }
         </Container >
