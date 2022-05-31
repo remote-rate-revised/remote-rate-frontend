@@ -5,26 +5,6 @@ import { Form, Button, Modal } from "react-bootstrap";
 import { UserContext } from "../context/userContext";
 
 function OfferFormModal(props) {
-  // constructor(props) {
-  //   super(props);
-  //   this.state = {
-  //     userInfo: this.props.userInfo,
-  //     offer: {
-  //       newSalary: 150000,
-  //       newEmployer: 'Best Place of Work',
-  //       newRemote: false,
-  //       newCommuteDist: '',
-  //       newCommuteTime: '',
-  //       newLocation: '',
-  //       workLat: '',
-  //       workLon: '',
-  //       newJob: this.props.newJob,
-  //       id: this.props.id,
-  //     },
-  //     // email: '',
-  //   }
-  // }
-
   let { userInfo, setUserInfo } = useContext(UserContext);
   let { offer, setOffer } = useContext(UserContext);
 
@@ -32,13 +12,11 @@ function OfferFormModal(props) {
     // function will use city stored in state to search api with axios
     try {
       let locationIQ = `https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ}&q=${offer.newLocation}&format=json`;
-      let newLocationData = await axios.get(locationIQ);
+      let newLocationData = await axios.get(locationIQ)
       let lon = newLocationData.data[0].lon;
       let lat = newLocationData.data[0].lat;
 
-      props.getWorkLocation2(lat, lon);
-
-      return { lat, lon };
+      return {lat, lon};
     } catch (err) {
       console.log("get location error", err);
     }
@@ -65,32 +43,34 @@ function OfferFormModal(props) {
       let lat;
       let lon;
       let dataObject = getNewLocation();
-      Promise.resolve(dataObject).then((res) => {
-        lat = res.lat;
-        lon = res.lon;
-        let newCommute = props.getWorkLocation2(lat, lon);
-        let newCommuteTime = getDistanceTime(newCommute);
+      console.log("dataObject", dataObject);
+      Promise.resolve(dataObject)
+        .then((res) => {
+          lat = res.lat;
+          lon = res.lon;
+          let newCommute = props.getWorkLocation2(lat, lon);
+          let newCommuteTime = getDistanceTime(newCommute);
 
-        let data = {
-          newSalary: offer.newSalary,
-          newEmployer: offer.newEmployer,
-          newRemote: offer.newRemote,
-          newLocation: offer.newLocation,
-          newCommuteDist: newCommute,
-          newCommuteTime: newCommuteTime,
-          workLat: lat,
-          workLon: lon,
-        };
-        let sendMe = userInfo.newJob;
-        sendMe.push(data);
-        axios.put(
-          `${process.env.REACT_APP_BACKEND_SERVER}/newoffer/${userInfo._id}`,
-          userInfo
-        );
-      })
-      .then((res) => {
-        props.getUserData();
-      });
+          let data = {
+            newSalary: offer.newSalary,
+            newEmployer: offer.newEmployer,
+            newRemote: offer.newRemote,
+            newLocation: offer.newLocation,
+            newCommuteDist: newCommute,
+            newCommuteTime: newCommuteTime,
+            workLat: lat,
+            workLon: lon,
+          };
+          let sendMe = userInfo.newJob;
+          sendMe.push(data);
+          axios.put(
+            `${process.env.REACT_APP_BACKEND_SERVER}/newoffer/${userInfo._id}`,
+            userInfo
+          );
+        })
+        .then((res) => {
+          props.getUserData();
+        });
     } catch (error) {
       console.log(error);
     }

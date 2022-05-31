@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import '../css/Compare.css';
 import axios from 'axios';
 import { Accordion, Card, Button, Container } from 'react-bootstrap';
@@ -10,10 +10,6 @@ import { UserContext } from '../context/userContext'
 
 function Compare(props) {
 
-
-  // const [ renderData, setRenderData ] = useState(false)
-  // const [email, setEmail] = useState(props.email)
-
   let { userInfo, setUserInfo } = useContext(UserContext)
 
   // componentDidMount = async () => {
@@ -24,19 +20,24 @@ function Compare(props) {
   //   }
   // }
 
-  // let getUserData = async () => {
-  //   const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/profile`);
-  //   const allData = response.data;
-  //   allData.map(user => {
-  //     if (user.email === this.state.email) {
-  //       this.setState({
-  //         userInfo: user,
-  //         renderData: true,
-  //       });
-  //     }
-  //     return user;
-  //   })
-  // }
+  useEffect(() => {
+    getUserData();
+    console.log('Run once')
+  }, [])
+
+  let getUserData = async () => {
+    const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/profile`);
+    const allData = response.data;
+    allData.map(user => {
+      if (user.email === userInfo.email) {
+        return setUserInfo((prevState) => ({
+          ...prevState,
+          ...user
+        }));
+      }
+      return user;
+    })
+  }
 
   let annualGasCost = (distance, gasAPI, carMPG) => {
     gasAPI = 3.50;
@@ -55,18 +56,6 @@ function Compare(props) {
     return difference;
   }
 
-
-  // let compareRemote = (compare, annualCost) => {
-
-  //   let comparedCost = compare - annualCost;
-
-  //   if (Math.sign(comparedCost) === 1) {
-  //     return `You will save ${comparedCost} yearly by taking not driving into work`
-  //   } else {
-  //     return `You will have to spend ${comparedCost} more each year driving if your driving into work`
-  //   }
-  // }
-
     const popover = (
       <Popover id="popover-basic">
         <Popover.Title as="h3">How to see comparisons</Popover.Title>
@@ -75,20 +64,14 @@ function Compare(props) {
         </Popover.Content>
       </Popover>
     );
-
-
     return (
-
       <>
-
         <Jumbotron className="p-3 mb-2 m-3 bg-secondary text-white" fluid>
           <h1>Hello!</h1>
           <p>
             Select your Offers below to compare them!
           </p>
           <p>
-
-
             <OverlayTrigger 
             trigger="click"   
             placement="right" 
