@@ -34,15 +34,18 @@ export const userInfoSlice = createSlice({
   initialState: initialStateValue,
   reducer: {
     updateUserInfo: (state, action) => {
-      state.userInfo += action.payload
+      state.userInfo = action.payload
     },
     addUserEmail: (state, action) => {
-      state.userInfo.email += action.payload
+      state.userInfo.email = action.payload
+    },
+    currentRemote: (state, action) => {
+      state.userInfo.curRemote = action.payload
     }
   },
 });
 
 // actions
-export const {updateUserInfo, addUserEmail} = userInfoSlice.actions;
+export const {updateUserInfo, addUserEmail, currentRemote} = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;

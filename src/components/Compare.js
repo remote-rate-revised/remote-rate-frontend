@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext, useState} from 'react';
 import '../css/Compare.css';
 import axios from 'axios';
 import { Accordion, Card, Button, Container } from 'react-bootstrap';
@@ -6,38 +6,39 @@ import Jumbotron from 'react-bootstrap/Jumbotron'
 import Popover from 'react-bootstrap/Popover'
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
-class Compare extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      email: this.props.email,
-      renderData: false,
-    }
-  }
+import { UserContext } from '../context/userContext'
 
-  componentDidMount = async () => {
-    try {
-      await this.getUserData();
-    } catch (err) {
-      console.log(err);
-    }
-  }
+function Compare(props) {
 
-  getUserData = async () => {
-    const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/profile`);
-    const allData = response.data;
-    allData.map(user => {
-      if (user.email === this.state.email) {
-        this.setState({
-          userInfo: user,
-          renderData: true,
-        });
-      }
-      return user;
-    })
-  }
 
-  annualGasCost = (distance, gasAPI, carMPG) => {
+  // const [ renderData, setRenderData ] = useState(false)
+  // const [email, setEmail] = useState(props.email)
+
+  let { userInfo, setUserInfo } = useContext(UserContext)
+
+  // componentDidMount = async () => {
+  //   try {
+  //     await this.getUserData();
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // }
+
+  // let getUserData = async () => {
+  //   const response = await axios.get(`${process.env.REACT_APP_BACKEND_SERVER}/profile`);
+  //   const allData = response.data;
+  //   allData.map(user => {
+  //     if (user.email === this.state.email) {
+  //       this.setState({
+  //         userInfo: user,
+  //         renderData: true,
+  //       });
+  //     }
+  //     return user;
+  //   })
+  // }
+
+  let annualGasCost = (distance, gasAPI, carMPG) => {
     gasAPI = 3.50;
 
     let gallonsPerTrip = distance / carMPG;
@@ -49,24 +50,23 @@ class Compare extends React.Component {
   }
 
 
-  compareOffer = (offer1, offer2) => {
+  let compareOffer = (offer1, offer2) => {
     let difference = offer1 - offer2;
     return difference;
   }
 
 
-  compareRemote = (compare, annualCost) => {
+  // let compareRemote = (compare, annualCost) => {
 
-    let comparedCost = compare - annualCost;
+  //   let comparedCost = compare - annualCost;
 
-    if (Math.sign(comparedCost) === 1) {
-      return `You will save ${comparedCost} yearly by taking not driving into work`
-    } else {
-      return `You will have to spend ${comparedCost} more each year driving if your driving into work`
-    }
-  }
+  //   if (Math.sign(comparedCost) === 1) {
+  //     return `You will save ${comparedCost} yearly by taking not driving into work`
+  //   } else {
+  //     return `You will have to spend ${comparedCost} more each year driving if your driving into work`
+  //   }
+  // }
 
-  render() {
     const popover = (
       <Popover id="popover-basic">
         <Popover.Title as="h3">How to see comparisons</Popover.Title>
@@ -100,10 +100,10 @@ class Compare extends React.Component {
           </p>
         </Jumbotron>
         
-        {this.state.renderData ?
+        {userInfo.newJob.length ?
           <Container >
             <Accordion className="m-4">
-              {this.state.userInfo.newJob.map((job, indx) => {
+              {userInfo.newJob.map((job, indx) => {
                 return (
                   <Card key={indx}>
                     <Accordion.Toggle as={Card.Header} eventKey={String(indx)}>
@@ -111,7 +111,7 @@ class Compare extends React.Component {
                     </Accordion.Toggle>
                     <Accordion.Collapse eventKey={String(indx)}>
                       <Card.Body>
-                        Net Gain from taking this position: {this.compareOffer(job.newSalary, this.state.userInfo.curSalary)}
+                        Net Gain from taking this position: {compareOffer(job.newSalary, userInfo.curSalary)}
                         <br />
                         New Salary: ${job.newSalary}
                         <br />
@@ -123,7 +123,7 @@ class Compare extends React.Component {
                         {job.newRemote ?
                           '' :
                           <>
-                            Annual gas cost: ${Math.round(this.annualGasCost(job.newCommuteDist, 3.50, this.state.userInfo.milesPerGal))}
+                            Annual gas cost: ${Math.round(annualGasCost(job.newCommuteDist, 3.50, userInfo.milesPerGal))}
                             <br />
                             New Commute Distance to Work:  {job.newCommuteDist} Miles
                             <br />
@@ -143,7 +143,7 @@ class Compare extends React.Component {
         <footer className="footer"></footer>
       </>
     )
-  }
+  
 }
 
 export default Compare;

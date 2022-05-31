@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Offer from "../Offer";
 import OfferFormModal from "../OfferFormModal";
 import {
@@ -15,27 +15,16 @@ import axios from "axios";
 import getDistance from "geolib/es/getDistance";
 import ProfileModal from "./ProfileModal";
 
-
+// Context
+import { UserContext } from '../../context/userContext'
 
 function Profile(props) {
-  const [userInfo, setUserInfo] = useState({
-    email: "",
-    homeLat: "",
-    homeLon: "",
-    workLat: "",
-    workLon: "",
-    curEmployer: "",
-    curSalary: "",
-    curRemote: false,
-    commuteDist: "",
-    milesPerGal: "",
-    newJob: [],
-    _id: "",
-  });
-
   const [addressToSearch, setAddressToSearch] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [showOfferModal, setShowOfferModal] = useState(false);
+
+  let { userInfo, setUserInfo } = useContext(UserContext)
+  let { setOffer } = useContext(UserContext)
 
   useEffect(() => {
     try {
@@ -43,10 +32,8 @@ function Profile(props) {
     } catch (err) {
       console.log("Component Did Mount Error", err);
     }
-  }, [userInfo.email])
+  }, [userInfo.email]);
 
-  // componentDidMount = async () => {
-  // };
 
   let getUserData = async () => {
     const response = await axios.get(
@@ -56,9 +43,9 @@ function Profile(props) {
     allData.map((user) => {
       // Database user vs user logged in
       if (user.email === props.email) {
-        return setUserInfo(prevState => ({
+        return setUserInfo((prevState) => ({
           ...prevState,
-          ...user
+          ...user,
         }));
       }
       return user;
@@ -76,12 +63,11 @@ function Profile(props) {
     let distanceInMiles = distanceToWork / 1609;
 
     setUserInfo((prevState) => ({
-        ...prevState,
-        commuteDist: distanceInMiles,
-        workLat: lat,
-        workLon: lon,
-      }
-    ));
+      ...prevState,
+      commuteDist: distanceInMiles,
+      workLat: lat,
+      workLon: lon,
+    }));
 
     return Math.round(distanceInMiles);
   };
@@ -97,14 +83,11 @@ function Profile(props) {
       let locationData = await axios.get(locationIQ);
 
       setUserInfo((prevState) => ({
-          ...prevState,
-          email: props.email,
-          homeLon: locationData.data[0].lon,
-          homeLat: locationData.data[0].lat,
-        }
-        // showEditModal: prevState.showEditModal,
-      ));
-    // setShowEditModal()
+        ...prevState,
+        email: props.email,
+        homeLon: locationData.data[0].lon,
+        homeLat: locationData.data[0].lat,
+      }));
 
       handleEditUser(userInfo);
     } catch (err) {
@@ -112,96 +95,42 @@ function Profile(props) {
     }
   };
 
+  let handleOnChange = (e) => {
+    e.preventDefault();
+    const { name, value } = e.target;
+    setOffer((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
   let handleCityInput = (e) => {
     e.preventDefault();
-    // setState((prevState) => ({
-    //   userInfo: {
-    //     ...prevState.userInfo,
-    //   },
-    //   addressToSearch: e.target.value,
-    //   showEditModal: prevState.showEditModal,
-    // }));
-    setAddressToSearch(e.target.value)
-
-  };
-
-  let handleEmployerInput = (e) => {
-    e.preventDefault();
-    setUserInfo((prevState) => ({
-        ...prevState,
-        curEmployer: e.target.value,
-      }
-      // showEditModal: prevState.showEditModal,
-    ));
-  };
-
-  let handleSalaryInput = (e) => {
-    e.preventDefault();
-    setUserInfo((prevState) => ({
-        ...prevState,
-        curSalary: e.target.value,
-      }
-      // showEditModal: prevState.showEditModal,
-    ));
+    setAddressToSearch(e.target.value);
   };
 
   let handleIsRemote = (e) => {
     e.preventDefault();
     setUserInfo((prevState) => ({
-        ...prevState,
-        curRemote: true,
-      }
-      // showEditModal: prevState.showEditModal,
-    ));
-  };
-
-  let handleCurCommute = (e) => {
-    e.preventDefault();
-
-    setUserInfo((prevState) => ({
-        ...prevState,
-        commuteDist: e.target.value,
-      }
-      // showEditModal: prevState.showEditModal,
-    ));
-  };
-
-  let handleMPG = (e) => {
-    e.preventDefault();
-    setUserInfo((prevState) => ({
-        ...prevState,
-        milesPerGal: e.target.value,
-      }
-      // showEditModal: prevState.showEditModal,
-    ));
+      ...prevState,
+      curRemote: true,
+    }));
   };
 
   let handleShowForm = () => {
-    // setState({
-    //   showEditModal: true,
-    // });
-    setShowEditModal(true)
+    setShowEditModal(true);
   };
 
   let handleShowOfferForm = () => {
-    // setState({
-    //   showOfferModal: true,
-    // });
-    setShowOfferModal(true)
+    setShowOfferModal(true);
   };
 
   let handleCloseOfferForm = () => {
-    // setState({
-    //   showOfferModal: false,
-    // });
-    setShowOfferModal(false)
+    setShowOfferModal(false);
   };
 
   let handleCloseForm = () => {
-    // setState({
-    //   showEditModal: false,
-    // });
-    setShowEditModal(false)
+    setShowEditModal(false);
   };
 
   let deleteOffer = async (user) => {
@@ -219,7 +148,7 @@ function Profile(props) {
     }
   };
 
-  let handleEditUser = async (userData) => {
+  async function handleEditUser(userData) {
     try {
       await axios.post(
         `${process.env.REACT_APP_BACKEND_SERVER}/profile`,
@@ -229,7 +158,7 @@ function Profile(props) {
     } catch (error) {
       console.log(error);
     }
-  };
+  }
 
   return (
     <>
@@ -272,7 +201,7 @@ function Profile(props) {
           </Col>
           <Col>
             <CardColumns>
-              {userInfo.newJob.map((job, idx) => (
+              {userInfo.newJob.length ? userInfo.newJob.map((job, idx) => (
                 <Offer
                   key={idx}
                   userInfo={userInfo}
@@ -283,7 +212,7 @@ function Profile(props) {
                   location={job.newLocation}
                   id={job._id}
                 />
-              ))}
+              )) : ''}
             </CardColumns>
           </Col>
         </Row>
@@ -293,11 +222,9 @@ function Profile(props) {
         <Modal show={showEditModal}>
           <ProfileModal
             getLocation={getLocation}
-            handleEmployerInput={handleEmployerInput}
+            handleOnChange={handleOnChange}
             handleCityInput={handleCityInput}
-            handleSalaryInput={handleSalaryInput}
             handleIsRemote={handleIsRemote}
-            handleMPG={handleMPG}
             handleCloseForm={handleCloseForm}
           />
         </Modal>
@@ -307,10 +234,10 @@ function Profile(props) {
 
       {showOfferModal ? (
         <OfferFormModal
-          id={userInfo._id}
+          // id={userInfo._id}
           getUserData={getUserData}
-          userInfo={userInfo}
-          newJob={userInfo.newJob}
+          // userInfo={userInfo}
+          // newJob={userInfo.newJob}
           showOfferModal={showOfferModal}
           handleCloseOfferForm={handleCloseOfferForm}
           getWorkLocation2={getWorkLocation2}

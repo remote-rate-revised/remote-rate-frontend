@@ -10,17 +10,9 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import Navbar from "../Nav/Navbar";
 import Alert from "react-bootstrap/Alert";
 
-// Redux
-// import { useDispatch } from "react-redux";
-// import { addUserEmail } from "../../features/userInfo/userInfoSlice.js";
 
 function Main(props) {
   const { user, isAuthenticated } = props.auth0;
-  // let dispatch = useDispatch();
-  // useEffect(() => {
-  //   useDispatch(addUserEmail(user.email));
-
-  // }, [user.email])
 
   return (
     <Container>

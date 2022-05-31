@@ -1,56 +1,71 @@
-import React from 'react';
+import React, { useContext, useState} from 'react';
 import { Button, Card } from 'react-bootstrap';
+import { UserContext } from '../context/userContext'
 
 
-class Offer extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      userInfo: {
-        ...this.props.userInfo,
-      },
-      buttonClicked: false,
-    }
-  }
+function Offer(props) {
+  // constructor(props) {
+  //   super(props);
+  //   this.state = {
+  //     userInfo: {
+  //       ...this.props.userInfo,
+  //     },
+  //     buttonClicked: false,
+  //   }
+  // }
 
-  handleClick = () => {
-    let needle = this.props.userInfo.newJob.filter(job => job._id !== this.props.id);
-    this.setState({
-      userInfo: {
-        ...this.state.userInfo,
-        newJob: needle,
-      },
-      buttonClicked: true,
-    })
+  let [ buttonClicked, setButtonClicked ] = useState(false)
+
+
+  let { userInfo, setUserInfo } = useContext(UserContext)
+
+
+  let handleClick = () => {
+    let newOffer = userInfo.newJob.filter(job => job._id !== this.props.id);
+    setUserInfo((prevState) => ({
+      ...prevState,
+      newJob: newOffer,
+    }))
+
+    setButtonClicked(true)
+
+    // this.setState({
+    //   userInfo: {
+    //     ...userInfo,
+    //     newJob: newOffer,
+    //   },
+    //   buttonClicked: true,
+    // })
     // this.props.deleteOffer(this.state.userInfo);
 
   }
 
-  render() {
-    if (this.state.buttonClicked) {
-      this.props.deleteOffer(this.state.userInfo);
-      this.setState({
-        buttonClicked: false,
-      });
+
+    if (buttonClicked) {
+      props.deleteOffer(userInfo);
+      setButtonClicked(false)
+      // this.setState({
+      //   buttonClicked: false,
+      // });
     };
     return (
       <Card>
 
         <Card.Header>
-          {this.props.employer}
+          {props.employer}
         </Card.Header>
         <Card.Body>
-          Salary: {this.props.salary}
+          Salary: {props.salary}
           <br />
-          Remote: {this.props.remote ? 'Yes' : 'No'}
+          Remote: {props.remote ? 'Yes' : 'No'}
         </Card.Body>
         <Card.Footer>
-          {this.props.location}
+          {props.location}
 
           <br />
           <Button 
           variant="outline-danger" 
-          onClick={this.handleClick} >
+          onClick={handleClick} >
             Delete
             </Button>
 
@@ -58,7 +73,7 @@ class Offer extends React.Component {
         
       </Card>
     )
-  }
+  
 }
 
 export default Offer;
