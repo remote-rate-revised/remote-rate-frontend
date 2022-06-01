@@ -66,6 +66,7 @@ function OfferFormModal(props) {
             `${process.env.REACT_APP_BACKEND_SERVER}/newoffer/${userInfo._id}`,
             userInfo
           );
+          props.getUserData();
         })
         .then((res) => {
           props.getUserData();
