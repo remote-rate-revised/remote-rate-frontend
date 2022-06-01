@@ -172,7 +172,7 @@ function Profile(props) {
               <Card.Header>Your Current Information</Card.Header>
               <Card.Body>
                 <Col>
-                  Home Address: {userInfo.homeLat}, {userInfo.homeLon}
+                  Home Address: {addressToSearch}
                   <br />
                   Employer: {userInfo.curEmployer}
                   <br />

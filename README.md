@@ -1,5 +1,8 @@
 # Remote Rate
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/136a71d2-fd3b-43a4-b7cf-342b31828ee8/deploy-status)](https://app.netlify.com/sites/remote-rate/deploys)
+- [Remote Rate Netlify Link](https://remote-rate.netlify.app/)
+
 ## Contributors:
 
 * Charlie Fadness
@@ -10,6 +13,8 @@
 ## About This App
 
 Unsure of whether it's worth it to take that job back in the office? Curious how much less you would need to make, to sustain a similar style of living, while working from home? This is the app you've been looking for. Tell us your location, job opportunities, and the MPG of your car, and we'll let you know the cost of commuting, versus staying home
+
+
 
 #### [Cooperation Plan](Administrivia/CooperationPlan.md)
 
@@ -35,10 +40,10 @@ Our application works with Google Maps API to get the location and uses MongoDB,
     - REACT_APP_AUTH0_DOMAIN=
     - REACT_APP_AUTH0_CLIENT_ID=
     - REACT_APP_BACKEND_SERVER=
-    - REACT_APP_GOOGLE_GEOCODE_API=
+    - REACT_APP_LOCATIONIQ=
 - Run local host with `npm start`
 
-- [Netlify Link]()
+
 
 ## Architecture
 <!-- Provide a detailed description of the application design. What technologies (languages, libraries, etc) you're using, and any other relevant design information. -->
