@@ -1,6 +1,4 @@
 import { Modal, Form, Button } from "react-bootstrap";
-// import { useDispatch } from 'react-redux';
-// import { currentRemote } from '../../features/userInfo/userInfoSlice';
 
 export default function ProfileModal(props) {
   return (

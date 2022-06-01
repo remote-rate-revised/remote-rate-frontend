@@ -12,17 +12,8 @@ function Compare(props) {
 
   let { userInfo, setUserInfo } = useContext(UserContext)
 
-  // componentDidMount = async () => {
-  //   try {
-  //     await this.getUserData();
-  //   } catch (err) {
-  //     console.log(err);
-  //   }
-  // }
-
   useEffect(() => {
     getUserData();
-    console.log('Run once')
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   let getUserData = async () => {
