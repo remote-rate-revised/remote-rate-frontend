@@ -138,17 +138,11 @@ function Profile(props) {
 
   let handleEditUser = async (userData) => {
     try {
-        // if (!userData.homelat) {
-        //   setTimeout(() => {
-        //     handleEditUser();
-        //   }, 100);
-        // } else {
-          axios.post(
+          await axios.post(
             `${process.env.REACT_APP_BACKEND_SERVER}/profile`,
             userData
           );
           getUserData();
-        // }
     } catch (error) {
       console.log(error);
     }
