@@ -19,11 +19,10 @@ import ProfileModal from "./ProfileModal";
 import { UserContext } from "../../context/userContext";
 
 function Profile(props) {
-  const [addressToSearch, setAddressToSearch] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [showOfferModal, setShowOfferModal] = useState(false);
 
-  let { userInfo, setUserInfo } = useContext(UserContext);
+  let { userInfo, setUserInfo, addressToSearch, setAddressToSearch } = useContext(UserContext);
 
   useEffect(() => {
     try {
@@ -139,18 +138,17 @@ function Profile(props) {
 
   let handleEditUser = async (userData) => {
     try {
-      // let isPaused = false
-        if (!userData.homelat) {
-          setTimeout(() => {
-            handleEditUser();
-          }, 100);
-        } else {
+        // if (!userData.homelat) {
+        //   setTimeout(() => {
+        //     handleEditUser();
+        //   }, 100);
+        // } else {
           axios.post(
             `${process.env.REACT_APP_BACKEND_SERVER}/profile`,
             userData
           );
           getUserData();
-        }
+        // }
     } catch (error) {
       console.log(error);
     }
@@ -162,7 +160,7 @@ function Profile(props) {
         <Row>
           <Col>
             <Jumbotron className="m-3 profileJumbotron">
-              <h1>Hello, {props.name} !</h1>
+              <h1>Hello, Welcome to Remote Rate!</h1>
             </Jumbotron>
           </Col>
         </Row>
