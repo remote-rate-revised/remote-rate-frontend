@@ -22,7 +22,8 @@ function Profile(props) {
   const [showEditModal, setShowEditModal] = useState(false);
   const [showOfferModal, setShowOfferModal] = useState(false);
 
-  let { userInfo, setUserInfo, addressToSearch, setAddressToSearch } = useContext(UserContext);
+  let { userInfo, setUserInfo, addressToSearch, setAddressToSearch } =
+    useContext(UserContext);
 
   useEffect(() => {
     try {
@@ -84,8 +85,24 @@ function Profile(props) {
         homeLon: locationData.data[0].lon,
         homeLat: locationData.data[0].lat,
       }));
-
-      handleEditUser(userInfo);
+      
+      
+      let userInfoUpdated = {
+        commuteDist: userInfo.commuteDist,
+        curEmployer: userInfo.curEmployer,
+        curRemote: userInfo.curRemote,
+        curSalary: userInfo.curSalary,
+        email: props.email,
+        homeLon: locationData.data[0].lon,
+        homeLat: locationData.data[0].lat,
+        milesPerGal: userInfo.milesPerGal,
+        newJob: userInfo.newJob,
+        workLat: userInfo.workLat,
+        workLon: userInfo.workLon,
+        _id: userInfo._id,
+      };
+      
+      handleEditUser(userInfoUpdated);
     } catch (err) {
       console.log(err);
     }
@@ -113,13 +130,13 @@ function Profile(props) {
     }));
   };
 
-  let handleShowForm = () => setShowEditModal(true)
+  let handleShowForm = () => setShowEditModal(true);
 
-  let handleShowOfferForm = () => setShowOfferModal(true)
+  let handleShowOfferForm = () => setShowOfferModal(true);
 
-  let handleCloseOfferForm = () => setShowOfferModal(false)
+  let handleCloseOfferForm = () => setShowOfferModal(false);
 
-  let handleCloseForm = () => setShowEditModal(false)
+  let handleCloseForm = () => setShowEditModal(false);
 
   let deleteOffer = async (user) => {
     try {
@@ -138,11 +155,11 @@ function Profile(props) {
 
   let handleEditUser = async (userData) => {
     try {
-          await axios.post(
-            `${process.env.REACT_APP_BACKEND_SERVER}/profile`,
-            userData
-          );
-          getUserData();
+      await axios.post(
+        `${process.env.REACT_APP_BACKEND_SERVER}/profile`,
+        userData
+      );
+      getUserData();
     } catch (error) {
       console.log(error);
     }
