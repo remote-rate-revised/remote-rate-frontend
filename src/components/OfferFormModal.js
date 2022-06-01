@@ -43,7 +43,6 @@ function OfferFormModal(props) {
       let lat;
       let lon;
       let dataObject = getNewLocation();
-      console.log("dataObject", dataObject);
       Promise.resolve(dataObject)
         .then((res) => {
           lat = res.lat;

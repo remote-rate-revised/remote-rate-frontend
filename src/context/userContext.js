@@ -26,8 +26,6 @@ export default function UserProvider(props) {
     newLocation: "",
     workLat: "",
     workLon: "",
-    // newJob: this.props.newJob,
-    // id: this.props.id,
     id: '',
   });
 

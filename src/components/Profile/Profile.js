@@ -142,7 +142,6 @@ function Profile(props) {
       // let isPaused = false
         if (!userData.homelat) {
           setTimeout(() => {
-            console.log('what')
             handleEditUser();
           }, 100);
         } else {
