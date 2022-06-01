@@ -102,7 +102,6 @@ function Profile(props) {
         _id: userInfo._id,
       };
       
-      console.log("userInfo", userInfoUpdated);
       handleEditUser(userInfoUpdated);
     } catch (err) {
       console.log(err);
