@@ -28,9 +28,10 @@ export default function UserProvider(props) {
     workLon: "",
     id: '',
   });
+  const [addressToSearch, setAddressToSearch] = useState("");
 
   return (
-    <UserContext.Provider value={{ userInfo, setUserInfo, offer, setOffer }}>
+    <UserContext.Provider value={{ userInfo, setUserInfo, offer, setOffer, addressToSearch, setAddressToSearch }}>
       {props.children}
     </UserContext.Provider>
   );

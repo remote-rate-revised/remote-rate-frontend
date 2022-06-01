@@ -25,11 +25,13 @@ function Offer(props) {
       <Card.Body>
         Salary: {props.job.newSalary}
         <br />
+        <br />
+        Location: {props.job.newLocation}
+        <br />
+        <br />
         Remote: {props.job.newRemote ? "Yes" : "No"}
       </Card.Body>
       <Card.Footer>
-        {props.newLocation}
-
         <br />
         <Button variant="outline-danger" onClick={handleDelete}>
           Delete

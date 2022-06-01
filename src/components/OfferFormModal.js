@@ -33,7 +33,7 @@ function OfferFormModal(props) {
     totalMinHours.toFixed(2);
     totalMaxHours.toFixed(2);
 
-    return `${totalMinHours} and ${totalMaxHours} hours`;
+    return `${totalMinHours.toFixed(2)} and ${totalMaxHours.toFixed(2)} hours`;
   };
 
   let handleSubmitOffer = async (e) => {
